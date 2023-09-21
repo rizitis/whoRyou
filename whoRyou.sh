@@ -56,40 +56,49 @@ echo "────────────────────────�
 
 # Package Information
 print_info "PACKAGE INFORMATION" "If the package is a service, rc.d print will be at the end." >> "/tmp/$pkgvar.whoRyou"
+echo " " >> "/tmp/$pkgvar.whoRyou"
 # Package Path
 print_info "Package Path" >> "/tmp/$pkgvar.whoRyou"
-which "$pkgvar" >> "/tmp/$pkgvar.whoRyou"
-grep ^bin/"$pkgvar"$ /var/lib/pkgtools/packages/* >> "/tmp/$pkgvar.whoRyou"
+	which "$pkgvar" >> "/tmp/$pkgvar.whoRyou"
+	grep ^bin/"$pkgvar"$ /var/lib/pkgtools/packages/* >> "/tmp/$pkgvar.whoRyou"
 
 # Package Size
 print_info "PACKAGE SIZE"  >> "/tmp/$pkgvar.whoRyou"
-echo " " >> "/tmp/$pkgvar.whoRyou"
+	echo " " >> "/tmp/$pkgvar.whoRyou"
 cd /var/lib/pkgtools/packages/
-ls * | grep "$pkgvar"
+	ls * | grep "$pkgvar"
 read -p 'Copy paste full package name-version-arch_tag if exist or type zero (0) and hit enter: ' fpkg
 if [ "$fpkg" = 0 ]; then
   echo ""  >> "/tmp/$pkgvar.whoRyou"
 else
   cat "$fpkg"* | grep SIZE >> "/tmp/$pkgvar.whoRyou"
-  echo " "
+echo " "  >> "/tmp/$pkgvar.whoRyou"
+# When and persmissions
+print_info "When..what permissions? " >> "/tmp/$pkgvar.whoRyou"
+if [ "$fpkg" = 0 ]; then
+ ls -ltr /var/log/packages/ | grep  "$pkgvar"  >> "/tmp/$pkgvar.whoRyou"
+else
+ ls -ltr /var/log/packages/ | grep "$fpkg" >> "/tmp/$pkgvar.whoRyou"
+fi
+echo " " >> "/tmp/$pkgvar.whoRyou"
     # Library Dependencies
-  print_info "LIBRARY DEPENDENCIES" >> "/tmp/$pkgvar.whoRyou"
-  echo " " >> "/tmp/$pkgvar.whoRyou"
-  ldd "$(which "$pkgvar")" >> "/tmp/$pkgvar.whoRyou"
-  echo "" >> "/tmp/$pkgvar.whoRyou"
-  # Service Information 
-  print_info "SERVICE INFORMATION" "" >> "/tmp/$pkgvar.whoRyou"
-  echo " " >> "/tmp/$pkgvar.whoRyou"
-  ls -la /etc/rc.d/ | grep "$pkgvar" >> "/tmp/$pkgvar.whoRyou"
-  echo " "  >> "/tmp/$pkgvar.whoRyou"
+print_info "LIBRARY DEPENDENCIES" >> "/tmp/$pkgvar.whoRyou"
+	  echo " " >> "/tmp/$pkgvar.whoRyou"
+	  ldd "$(which "$pkgvar")" >> "/tmp/$pkgvar.whoRyou"
+	  echo "" >> "/tmp/$pkgvar.whoRyou"
+# Service Information (empty in this example)
+print_info "SERVICE INFORMATION" "" >> "/tmp/$pkgvar.whoRyou"
+	  echo " " >> "/tmp/$pkgvar.whoRyou"
+	  ls -la /etc/rc.d/ | grep "$pkgvar" >> "/tmp/$pkgvar.whoRyou"
+	  echo " "  >> "/tmp/$pkgvar.whoRyou"
   # Is it a Library?
   print_info "IS IT A LIBRARY?" >> "/tmp/$pkgvar.whoRyou"
   echo " " >> "/tmp/$pkgvar.whoRyou"
-  if [ "$fpkg" = 0 ]; then
+if [ "$fpkg" = 0 ]; then
     echo " " >> "/tmp/$pkgvar.whoRyou"
   else
     sudo ldconfig -p | grep "$pkgvar" >> "/tmp/$pkgvar.whoRyou"
-  fi
+ fi
 fi
 echo " " >> "/tmp/$pkgvar.whoRyou"
 print_info "If the full package name = 0, then only **PACKAGE INFORMATION** is correct." >> "/tmp/$pkgvar.whoRyou"
