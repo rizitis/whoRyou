@@ -107,4 +107,4 @@ print_heading "─────────────────────�
 echo -e "${BOLD}${BLUE}"
 clear
 cat /tmp/$pkgvar.whoRyou
-
+rm /tmp/*.whoRyou
