@@ -1,15 +1,21 @@
 #!/bin/bash
 
-# copy paste and modifies
-# 2023 rizitis
-# LONG LIVE SLACKWARE
+# Define color codes and formatting
+BOLD="\e[1m"
+BLUE="\e[34m"
+RESET="\e[0m"
+UNDERLINE="\e[4m"
+GREEN="\e[32m"
 
-if [ "root" != "$USER" ]; then
-  echo "Enter su"
-  su -c "$0" root
-  exit
-fi
+# Function to display section headings
+print_heading() {
+    echo -e "${UNDERLINE}${BOLD}${BLUE}$1${RESET}"
+}
 
+# Function to display package information
+print_info() {
+    echo -e "📦 **$1**\n$2"
+}
 
 clear
 echo -e "\e[1;34m"
@@ -29,70 +35,57 @@ cat << "EOF"
 
 EOF
 echo -e "\e[0m"
-
-
+echo -e "${RESET}"
 
 read -p 'Enter package name: ' pkgvar
-echo "Hello Slacker, package $pkgvar infos are:" > /tmp/"$pkgvar".whoRyou
-echo " " >> /tmp/"$pkgvar".whoRyou
-echo "====== PATH =======" >> /tmp/"$pkgvar".whoRyou
-echo "If package is a service rc.d print ll be at the end" >> /tmp/"$pkgvar".whoRyou
-echo " " >> /tmp/"$pkgvar".whoRyou
-# https://mirrors.slackware.com/slackware/slackware-current/source/README.TXT
-which "$pkgvar" >> /tmp/"$pkgvar".whoRyou
-grep ^bin/"$pkgvar"$ /var/lib/pkgtools/packages/* >> /tmp/"$pkgvar".whoRyou
-echo " " >> /tmp/"$pkgvar".whoRyou
-wait
-echo " "  >> /tmp/"$pkgvar".whoRyou
-# https://www.linuxquestions.org/questions/slackware-14/is-there-manual-how-to-remove-unnecessary-stuff-from-slackware-4175723178/page3.html#post6418675
-echo "======= PACKAGE SIZE ======" >> /tmp/"$pkgvar".whoRyou
+
 clear
-wait
+echo "─────────────────────────────────────────────────────────────────────────────" > "/tmp/$pkgvar.whoRyou"
+print_heading "Hello Slacker, here's the information for package '$pkgvar':" >> "/tmp/$pkgvar.whoRyou"
+echo "─────────────────────────────────────────────────────────────────────────────" >> "/tmp/$pkgvar.whoRyou"
+
+# Package Information
+print_info "PACKAGE INFORMATION" "If the package is a service, rc.d print will be at the end." >> "/tmp/$pkgvar.whoRyou"
+# Package Path
+print_info "Package Path" >> "/tmp/$pkgvar.whoRyou"
+which "$pkgvar" >> "/tmp/$pkgvar.whoRyou"
+grep ^bin/"$pkgvar"$ /var/lib/pkgtools/packages/* >> "/tmp/$pkgvar.whoRyou"
+
+# Package Size
+print_info "PACKAGE SIZE"  >> "/tmp/$pkgvar.whoRyou"
+echo " " >> "/tmp/$pkgvar.whoRyou"
 cd /var/lib/pkgtools/packages/
 ls * | grep "$pkgvar"
-read -p 'Copy full package name-version-arch_tag if exist or type zero (0) and hit enter: ' fpkg
+read -p 'Copy paste full package name-version-arch_tag if exist or type zero (0) and hit enter: ' fpkg
 if [ "$fpkg" = 0 ]; then
-echo ""  >> /tmp/"$pkgvar".whoRyou
+  echo ""  >> "/tmp/$pkgvar.whoRyou"
 else
-cat "$fpkg"* | grep SIZE >> /tmp/"$pkgvar".whoRyou
+  cat "$fpkg"* | grep SIZE >> "/tmp/$pkgvar.whoRyou"
+  echo " "
+    # Library Dependencies
+  print_info "LIBRARY DEPENDENCIES" >> "/tmp/$pkgvar.whoRyou"
+  echo " " >> "/tmp/$pkgvar.whoRyou"
+  ldd "$(which "$pkgvar")" >> "/tmp/$pkgvar.whoRyou"
+  echo "" >> "/tmp/$pkgvar.whoRyou"
+  # Service Information (empty in this example)
+  print_info "SERVICE INFORMATION" "" >> "/tmp/$pkgvar.whoRyou"
+  echo " " >> "/tmp/$pkgvar.whoRyou"
+  ls -la /etc/rc.d/ | grep "$pkgvar" >> "/tmp/$pkgvar.whoRyou"
+  echo " "  >> "/tmp/$pkgvar.whoRyou"
+  # Is it a Library?
+  print_info "IS IT A LIBRARY?" >> "/tmp/$pkgvar.whoRyou"
+  echo " " >> "/tmp/$pkgvar.whoRyou"
+  if [ "$fpkg" = 0 ]; then
+    echo " " >> "/tmp/$pkgvar.whoRyou"
+  else
+    sudo ldconfig -p | grep "$pkgvar" >> "/tmp/$pkgvar.whoRyou"
+  fi
 fi
-wait
-echo " " >> /tmp/"$pkgvar".whoRyou
-# that's mine LOL
-echo "======== installation package path ==========" >> /tmp/"$pkgvar".whoRyou
-if [ "$fpkg" = 0 ]; then
-echo ""  >> /tmp/"$pkgvar".whoRyou
-else
-locate "$fpkg" | grep txz | grep -v .asc >> /tmp/"$pkgvar".whoRyou
-fi
-echo " "  >> /tmp/"$pkgvar".whoRyou
-wait
-echo " "
-# ah...
-echo "====== LIBS ======" >> /tmp/"$pkgvar".whoRyou
-ldd "$(which "$pkgvar")" >> /tmp/"$pkgvar".whoRyou
-echo "" >> /tmp/"$pkgvar".whoRyou
-wait
-
-echo " " >> /tmp/"$pkgvar".whoRyou
-# https://www.linuxquestions.org/questions/slackware-14/is-there-manual-how-to_remove_unnecessary-stuff_from_slackware-4175723178/#post6418574
-
-echo "====== SERVICE =======" >> /tmp/"$pkgvar".whoRyou
-echo "If package a service rc.d print ll be here" >> /tmp/"$pkgvar".whoRyou
-ls -la /etc/rc.d/ | grep "$pkgvar" >> /tmp/"$pkgvar".whoRyou
-echo " "  >> /tmp/"$pkgvar".whoRyou
-wait
+echo " " >> "/tmp/$pkgvar.whoRyou"
+print_info "If the full package name = 0, then only **PACKAGE INFORMATION** is correct." >> "/tmp/$pkgvar.whoRyou"
+print_info "Other info may not be accurate :)" >> "/tmp/$pkgvar.whoRyou"
+print_heading "─────────────────────────────────────────────────────────────────────────────" >> "/tmp/$pkgvar.whoRyou"
+echo -e "${BOLD}${BLUE}"
 clear
-echo " " >> /tmp/"$pkgvar".whoRyou
-echo "========== Is it a library ? ============= " >> /tmp/"$pkgvar".whoRyou
-if [ "$fpkg" = 0 ]; then
-echo " " >> /tmp/"$pkgvar".whoRyou
-else
-sudo ldconfig -p | grep "$pkgvar" >> /tmp/"$pkgvar".whoRyou
-fi
-echo " " >> /tmp/"$pkgvar".whoRyou
-clear
-echo "======================================================="
-echo "If full package name = 0 ; then only ====== PATH =======
-is correct, other infos probably NOT :) " >> /tmp/"$pkgvar".whoRyou
-cat /tmp/"$pkgvar".whoRyou
+cat /tmp/$pkgvar.whoRyou
+
