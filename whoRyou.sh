@@ -1,5 +1,15 @@
 #!/bin/bash
 
+# Anagnostakis Ioannis 2023
+# GNU GENERAL PUBLIC LICENSE
+# LONG LIVE SLACKWARE
+
+if [ "root" != "$USER" ]; then
+  echo "Enter su"
+  su -c "$0" root
+  exit
+fi
+
 # Define color codes and formatting
 BOLD="\e[1m"
 BLUE="\e[34m"
