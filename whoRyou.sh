@@ -77,7 +77,7 @@ else
   echo " " >> "/tmp/$pkgvar.whoRyou"
   ldd "$(which "$pkgvar")" >> "/tmp/$pkgvar.whoRyou"
   echo "" >> "/tmp/$pkgvar.whoRyou"
-  # Service Information (empty in this example)
+  # Service Information 
   print_info "SERVICE INFORMATION" "" >> "/tmp/$pkgvar.whoRyou"
   echo " " >> "/tmp/$pkgvar.whoRyou"
   ls -la /etc/rc.d/ | grep "$pkgvar" >> "/tmp/$pkgvar.whoRyou"
