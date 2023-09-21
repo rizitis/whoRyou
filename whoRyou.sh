@@ -50,61 +50,61 @@ echo -e "${RESET}"
 read -p 'Enter package name: ' pkgvar
 
 clear
-echo "─────────────────────────────────────────────────────────────────────────────" > "/root/$pkgvar.whoRyou"
-print_heading "Hello Slacker, here's the information for package '$pkgvar':" >> "/root/$pkgvar.whoRyou"
-echo "─────────────────────────────────────────────────────────────────────────────" >> "/root/$pkgvar.whoRyou"
+echo "─────────────────────────────────────────────────────────────────────────────" > "/dev/shm/$pkgvar.whoRyou"
+print_heading "Hello Slacker, here's the information for package '$pkgvar':" >> "/dev/shm/$pkgvar.whoRyou"
+echo "─────────────────────────────────────────────────────────────────────────────" >> "/dev/shm/$pkgvar.whoRyou"
 
 # Package Information
-print_info "PACKAGE INFORMATION" "If the package is a service, rc.d print will be at the end." >> "/root/$pkgvar.whoRyou"
-echo " " >> "/root/$pkgvar.whoRyou"
+print_info "PACKAGE INFORMATION" "If the package is a service, rc.d print will be at the end." >> "/dev/shm/$pkgvar.whoRyou"
+echo " " >> "/dev/shm/$pkgvar.whoRyou"
 # Package Path
-print_info "Package Path" >> "/root/$pkgvar.whoRyou"
-	which "$pkgvar" >> "/root/$pkgvar.whoRyou"
-	grep ^bin/"$pkgvar"$ /var/lib/pkgtools/packages/* >> "/root/$pkgvar.whoRyou"
+print_info "Package Path" >> "/dev/shm/$pkgvar.whoRyou"
+	which "$pkgvar" >> "/dev/shm/$pkgvar.whoRyou"
+	grep ^bin/"$pkgvar"$ /var/lib/pkgtools/packages/* >> "/dev/shm/$pkgvar.whoRyou"
 
 # Package Size
-print_info "PACKAGE SIZE"  >> "/root/$pkgvar.whoRyou"
-	echo " " >> "/root/$pkgvar.whoRyou"
+print_info "PACKAGE SIZE"  >> "/dev/shm/$pkgvar.whoRyou"
+	echo " " >> "/dev/shm/$pkgvar.whoRyou"
 cd /var/lib/pkgtools/packages/
 	ls * | grep "$pkgvar"
 read -p 'Copy paste full package name-version-arch_tag if exist or type zero (0) and hit enter: ' fpkg
 if [ "$fpkg" = 0 ]; then
-  echo ""  >> "/root/$pkgvar.whoRyou"
+  echo ""  >> "/dev/shm/$pkgvar.whoRyou"
 else
-  cat "$fpkg"* | grep SIZE >> "/root/$pkgvar.whoRyou"
-echo " "  >> "/root/$pkgvar.whoRyou"
+  cat "$fpkg"* | grep SIZE >> "/dev/shm/$pkgvar.whoRyou"
+echo " "  >> "/dev/shm/$pkgvar.whoRyou"
 # When and persmissions
-print_info "When..what permissions? " >> "/root/$pkgvar.whoRyou"
+print_info "When..what permissions? " >> "/dev/shm/$pkgvar.whoRyou"
 if [ "$fpkg" = 0 ]; then
- ls -ltr /var/log/packages/ | grep  "$pkgvar"  >> "/root/$pkgvar.whoRyou"
+ ls -ltr /var/log/packages/ | grep  "$pkgvar"  >> "/dev/shm/$pkgvar.whoRyou"
 else
- ls -ltr /var/log/packages/ | grep "$fpkg" >> "/root/$pkgvar.whoRyou"
+ ls -ltr /var/log/packages/ | grep "$fpkg" >> "/dev/shm/$pkgvar.whoRyou"
 fi
-echo " " >> "/root/$pkgvar.whoRyou"
+echo " " >> "/dev/shm/$pkgvar.whoRyou"
     # Library Dependencies
-print_info "LIBRARY DEPENDENCIES" >> "/root/$pkgvar.whoRyou"
-	  echo " " >> "/root/$pkgvar.whoRyou"
-	  ldd "$(which "$pkgvar")" >> "/root/$pkgvar.whoRyou"
-	  echo "" >> "/root/$pkgvar.whoRyou"
+print_info "LIBRARY DEPENDENCIES" >> "/dev/shm/$pkgvar.whoRyou"
+	  echo " " >> "/dev/shm/$pkgvar.whoRyou"
+	  ldd "$(which "$pkgvar")" >> "/dev/shm/$pkgvar.whoRyou"
+	  echo "" >> "/dev/shm/$pkgvar.whoRyou"
 # Service Information (empty in this example)
-print_info "SERVICE INFORMATION" "" >> "/root/$pkgvar.whoRyou"
-	  echo " " >> "/root/$pkgvar.whoRyou"
-	  ls -la /etc/rc.d/ | grep "$pkgvar" >> "/root/$pkgvar.whoRyou"
-	  echo " "  >> "/root/$pkgvar.whoRyou"
+print_info "SERVICE INFORMATION" "" >> "/dev/shm/$pkgvar.whoRyou"
+	  echo " " >> "/dev/shm/$pkgvar.whoRyou"
+	  ls -la /etc/rc.d/ | grep "$pkgvar" >> "/dev/shm/$pkgvar.whoRyou"
+	  echo " "  >> "/dev/shm/$pkgvar.whoRyou"
   # Is it a Library?
-  print_info "IS IT A LIBRARY?" >> "/root/$pkgvar.whoRyou"
-  echo " " >> "/root/$pkgvar.whoRyou"
+  print_info "IS IT A LIBRARY?" >> "/dev/shm/$pkgvar.whoRyou"
+  echo " " >> "/dev/shm/$pkgvar.whoRyou"
 if [ "$fpkg" = 0 ]; then
-    echo " " >> "/root/$pkgvar.whoRyou"
+    echo " " >> "/dev/shm/$pkgvar.whoRyou"
   else
-    sudo ldconfig -p | grep "$pkgvar" >> "/root/$pkgvar.whoRyou"
+    sudo ldconfig -p | grep "$pkgvar" >> "/dev/shm/$pkgvar.whoRyou"
  fi
 fi
-echo " " >> "/root/$pkgvar.whoRyou"
-print_info "If the full package name = 0, then only **PACKAGE INFORMATION** is correct." >> "/root/$pkgvar.whoRyou"
-print_info "Other info may not be accurate :)" >> "/root/$pkgvar.whoRyou"
-print_heading "─────────────────────────────────────────────────────────────────────────────" >> "/root/$pkgvar.whoRyou"
+echo " " >> "/dev/shm/$pkgvar.whoRyou"
+print_info "If the full package name = 0, then only **PACKAGE INFORMATION** is correct." >> "/dev/shm/$pkgvar.whoRyou"
+print_info "Other info may not be accurate :)" >> "/dev/shm/$pkgvar.whoRyou"
+print_heading "─────────────────────────────────────────────────────────────────────────────" >> "/dev/shm/$pkgvar.whoRyou"
 echo -e "${BOLD}${BLUE}"
 clear
-cat /root/$pkgvar.whoRyou
-rm /root/*.whoRyou
+cat /dev/shm/$pkgvar.whoRyou
+rm /dev/shm/*.whoRyou
