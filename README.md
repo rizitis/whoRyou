@@ -2,10 +2,6 @@
 print informations about intput package if its installed
 
 # Install
-edit /etc/fstab like this:
-```
-tmpfs            /dev/shm         tmpfs      defaults,noexec,nodev,nosuid 0   0
-```
 
 ```
 cd /usr/local/bin
