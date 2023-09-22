@@ -4,12 +4,9 @@ print informations about intput package if its installed
 # Install
 edit /etc/fstab like this:
 ```
-tmpfs            /dev/shm         tmpfs      defaults,noexec,nodev,nosuid,seclabel 0 0size=16G 0   0
+tmpfs            /dev/shm         tmpfs      defaults,noexec,nodev,nosuid,seclabel,size=1G 0   0
 ```
-then command
-```
-mount -o remount,noexec,nodev,nosuid /dev/shm
-```
+
 ```
 cd /usr/local/bin
 wget -O whoRyou https://raw.githubusercontent.com/rizitis/whoRyou/main/whoRyou.sh
