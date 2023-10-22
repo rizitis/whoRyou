@@ -53,7 +53,21 @@ chown root:root /tmp/whoRyou
 read -p 'Enter package name: ' pkgvar
 
 clear
+echo "─────────────────────────────────────────────────────────────────────────────" > "/tmp/whoRyou/$pkgvar.whoRyou"
+print_heading "Hello Slacker, here's the information for package '$pkgvar':" >> "/tmp/whoRyou/$pkgvar.whoRyou"
+echo "─────────────────────────────────────────────────────────────────────────────" >> "/tmp/whoRyou/$pkgvar.whoRyou"
 
+# Package Information
+print_info "PACKAGE INFORMATION" "If the package is a service, rc.d print will be at the end." >> "/tmp/whoRyou/$pkgvar.whoRyou"
+echo " " >> "/tmp/whoRyou/$pkgvar.whoRyou"
+# Package Path
+print_info "Package Path" >> "/tmp/whoRyou/$pkgvar.whoRyou"
+	which "$pkgvar" >> "/tmp/whoRyou/$pkgvar.whoRyou"
+	grep ^bin/"$pkgvar"$ /var/lib/pkgtools/packages/* >> "/tmp/whoRyou/$pkgvar.whoRyou"
+
+# Package Size
+print_info "PACKAGE SIZE"  >> "/tmp/whoRyou/$pkgvar.whoRyou"
+	echo " " >> "/tmp/whoRyou/$pkgvar.whoRyou"
 cd /var/lib/pkgtools/packages/
 echo "─────────────────────────────────────────────────────────────────────────────" 
 echo "Select the number of package and hit [enter]"
@@ -73,23 +87,6 @@ else
  ls -ltr /var/log/packages/ | grep "$fpkg" >> "/tmp/whoRyou/$pkgvar.whoRyou"
 fi
 echo " " >> "/tmp/whoRyou/$pkgvar.whoRyou"
-
-echo "─────────────────────────────────────────────────────────────────────────────" > "/tmp/whoRyou/$pkgvar.whoRyou"
-print_heading "Hello Slacker, here's the information for package '$pkgvar':" >> "/tmp/whoRyou/$pkgvar.whoRyou"
-echo "─────────────────────────────────────────────────────────────────────────────" >> "/tmp/whoRyou/$pkgvar.whoRyou"
-
-# Package Information
-print_info "PACKAGE INFORMATION" >> "/tmp/whoRyou/$pkgvar.whoRyou"
-echo " " >> "/tmp/whoRyou/$pkgvar.whoRyou"
-# Package Path
-print_info "Package Path" >> "/tmp/whoRyou/$pkgvar.whoRyou"
-	which "$pkgvar" >> "/tmp/whoRyou/$pkgvar.whoRyou"
-	grep ^bin/"$pkgvar"$ /var/lib/pkgtools/packages/* >> "/tmp/whoRyou/$pkgvar.whoRyou"
-echo " " >> "/tmp/whoRyou/$pkgvar.whoRyou"
-# Package Size
-print_info "PACKAGE SIZE"  >> "/tmp/whoRyou/$pkgvar.whoRyou"
-	echo " " >> "/tmp/whoRyou/$pkgvar.whoRyou"
-
     # Library Dependencies
 print_info "LIBRARY DEPENDENCIES" >> "/tmp/whoRyou/$pkgvar.whoRyou"
 	  echo " " >> "/tmp/whoRyou/$pkgvar.whoRyou"
@@ -110,7 +107,8 @@ if [ "$fpkg" = 0 ]; then
  fi
 fi
 echo " " >> "/tmp/whoRyou/$pkgvar.whoRyou"
-
+print_info "If the full package name = 0, then only **PACKAGE INFORMATION** is correct." >> "/tmp/whoRyou/$pkgvar.whoRyou"
+print_info "Other info may not be accurate :)" >> "/tmp/whoRyou/$pkgvar.whoRyou"
 print_heading "─────────────────────────────────────────────────────────────────────────────" >> "/tmp/whoRyou/$pkgvar.whoRyou"
 echo -e "${BOLD}${BLUE}"
 clear
